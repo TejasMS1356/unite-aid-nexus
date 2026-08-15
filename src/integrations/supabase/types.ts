@@ -14,16 +14,339 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agencies: {
+        Row: {
+          address: string | null
+          agency_type: string
+          availability: Database["public"]["Enums"]["availability"]
+          capabilities: string[]
+          contact_email: string | null
+          contact_person: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string | null
+          district: string | null
+          id: string
+          last_active_at: string
+          latitude: number
+          longitude: number
+          name: string
+          owner_id: string
+          personnel_count: number
+          state: string | null
+          status: Database["public"]["Enums"]["agency_status"]
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          agency_type: string
+          availability?: Database["public"]["Enums"]["availability"]
+          capabilities?: string[]
+          contact_email?: string | null
+          contact_person?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          district?: string | null
+          id?: string
+          last_active_at?: string
+          latitude: number
+          longitude: number
+          name: string
+          owner_id: string
+          personnel_count?: number
+          state?: string | null
+          status?: Database["public"]["Enums"]["agency_status"]
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          agency_type?: string
+          availability?: Database["public"]["Enums"]["availability"]
+          capabilities?: string[]
+          contact_email?: string | null
+          contact_person?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          district?: string | null
+          id?: string
+          last_active_at?: string
+          latitude?: number
+          longitude?: number
+          name?: string
+          owner_id?: string
+          personnel_count?: number
+          state?: string | null
+          status?: Database["public"]["Enums"]["agency_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      alerts: {
+        Row: {
+          created_at: string
+          from_agency_id: string | null
+          id: string
+          incident_id: string | null
+          message: string
+          sender_id: string
+          to_agency_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          from_agency_id?: string | null
+          id?: string
+          incident_id?: string | null
+          message: string
+          sender_id: string
+          to_agency_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          from_agency_id?: string | null
+          id?: string
+          incident_id?: string | null
+          message?: string
+          sender_id?: string
+          to_agency_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_from_agency_id_fkey"
+            columns: ["from_agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alerts_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alerts_to_agency_id_fkey"
+            columns: ["to_agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incidents: {
+        Row: {
+          address: string | null
+          created_at: string
+          description: string | null
+          disaster_type: string
+          id: string
+          latitude: number
+          longitude: number
+          people_affected: number
+          photo_url: string | null
+          reporter_id: string
+          severity: number
+          status: Database["public"]["Enums"]["incident_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          disaster_type: string
+          id?: string
+          latitude: number
+          longitude: number
+          people_affected?: number
+          photo_url?: string | null
+          reporter_id: string
+          severity?: number
+          status?: Database["public"]["Enums"]["incident_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          disaster_type?: string
+          id?: string
+          latitude?: number
+          longitude?: number
+          people_affected?: number
+          photo_url?: string | null
+          reporter_id?: string
+          severity?: number
+          status?: Database["public"]["Enums"]["incident_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      missions: {
+        Row: {
+          agency_id: string
+          created_at: string
+          id: string
+          incident_id: string
+          note: string | null
+          resource_id: string | null
+          status: Database["public"]["Enums"]["mission_status"]
+          updated_at: string
+        }
+        Insert: {
+          agency_id: string
+          created_at?: string
+          id?: string
+          incident_id: string
+          note?: string | null
+          resource_id?: string | null
+          status?: Database["public"]["Enums"]["mission_status"]
+          updated_at?: string
+        }
+        Update: {
+          agency_id?: string
+          created_at?: string
+          id?: string
+          incident_id?: string
+          note?: string | null
+          resource_id?: string | null
+          status?: Database["public"]["Enums"]["mission_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "missions_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "missions_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "missions_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      resources: {
+        Row: {
+          agency_id: string
+          created_at: string
+          id: string
+          kind: string
+          name: string
+          quantity: number
+          status: Database["public"]["Enums"]["availability"]
+          updated_at: string
+        }
+        Insert: {
+          agency_id: string
+          created_at?: string
+          id?: string
+          kind: string
+          name: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["availability"]
+          updated_at?: string
+        }
+        Update: {
+          agency_id?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          name?: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["availability"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resources_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      owns_agency: { Args: { _agency_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      agency_status: "pending" | "verified" | "rejected"
+      app_role: "admin" | "agency" | "responder"
+      availability: "available" | "on_mission" | "offline"
+      incident_status: "reported" | "assigned" | "in_progress" | "resolved"
+      mission_status: "pending" | "accepted" | "declined" | "completed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +473,12 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      agency_status: ["pending", "verified", "rejected"],
+      app_role: ["admin", "agency", "responder"],
+      availability: ["available", "on_mission", "offline"],
+      incident_status: ["reported", "assigned", "in_progress", "resolved"],
+      mission_status: ["pending", "accepted", "declined", "completed"],
+    },
   },
 } as const

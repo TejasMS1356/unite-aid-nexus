@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAgencyRouteImport } from './routes/_authenticated/agency'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedMapRouteImport } from './routes/_authenticated/map'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -33,16 +35,30 @@ const AuthenticatedAgencyRoute = AuthenticatedAgencyRouteImport.update({
   path: '/agency',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMapRoute = AuthenticatedMapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/agency': typeof AuthenticatedAgencyRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/map': typeof AuthenticatedMapRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/agency': typeof AuthenticatedAgencyRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/map': typeof AuthenticatedMapRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -50,13 +66,22 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/agency': typeof AuthenticatedAgencyRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/map': typeof AuthenticatedMapRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/agency'
+  fullPaths: '/' | '/auth' | '/agency' | '/dashboard' | '/map'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/agency'
-  id: '__root__' | '/' | '/_authenticated' | '/auth' | '/_authenticated/agency'
+  to: '/' | '/auth' | '/agency' | '/dashboard' | '/map'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/agency'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/map'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -95,15 +120,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAgencyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/map': {
+      id: '/_authenticated/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof AuthenticatedMapRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAgencyRoute: typeof AuthenticatedAgencyRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedMapRoute: typeof AuthenticatedMapRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAgencyRoute: AuthenticatedAgencyRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedMapRoute: AuthenticatedMapRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

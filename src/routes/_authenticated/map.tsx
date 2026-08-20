@@ -65,6 +65,23 @@ function MapPage() {
     },
   });
 
+  useEffect(() => {
+    const refresh = () => {
+      setLiveAt(new Date());
+      qc.invalidateQueries({ queryKey: ["map-data"] });
+    };
+    const channel = supabase
+      .channel("live-map")
+      .on("postgres_changes", { event: "*", schema: "public", table: "agencies" }, refresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "incidents" }, refresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "resources" }, refresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "missions" }, refresh)
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [qc]);
+
   const filtered = useMemo(() => {
     const list = data?.agencies ?? [];
     return list.filter((a) => {

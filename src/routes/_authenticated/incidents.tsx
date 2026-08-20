@@ -322,7 +322,8 @@ function IncidentsPage() {
 }
 
 type AgencyRow = { id: string; name: string; agency_type: string; owner_id: string };
-type MissionRow = { id: string; agency_id: string; resource_id: string | null; status: string; note: string | null };
+type MissionStatus = "pending" | "accepted" | "declined" | "completed";
+type MissionRow = { id: string; agency_id: string; resource_id: string | null; status: MissionStatus; note: string | null };
 
 function Coordination({
   incidentId,
@@ -391,7 +392,7 @@ function Coordination({
   });
 
   const respond = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+    mutationFn: async ({ id, status }: { id: string; status: MissionStatus }) => {
       const { error } = await supabase.from("missions").update({ status }).eq("id", id);
       if (error) throw error;
     },

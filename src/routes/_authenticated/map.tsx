@@ -176,7 +176,7 @@ function MapPage() {
                 max={2000}
                 step={25}
                 value={[radius]}
-                onValueChange={([v]) => setRadius(v)}
+                onValueChange={([v]) => setRadius(v ?? radius)}
                 disabled={!origin}
               />
               <Button variant="outline" size="sm" className="w-full" onClick={locate}>

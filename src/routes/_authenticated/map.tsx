@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Crosshair } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -49,6 +49,9 @@ function MapPage() {
   const [origin, setOrigin] = useState<{ lat: number; lng: number } | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
 
+  const qc = useQueryClient();
+  const [liveAt, setLiveAt] = useState<Date | null>(null);
+
   const { data } = useQuery({
     queryKey: ["map-data"],
     queryFn: async () => {
@@ -61,6 +64,23 @@ function MapPage() {
       return { agencies: agencies.data, incidents: incidents.data };
     },
   });
+
+  useEffect(() => {
+    const refresh = () => {
+      setLiveAt(new Date());
+      qc.invalidateQueries({ queryKey: ["map-data"] });
+    };
+    const channel = supabase
+      .channel("live-map")
+      .on("postgres_changes", { event: "*", schema: "public", table: "agencies" }, refresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "incidents" }, refresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "resources" }, refresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "missions" }, refresh)
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [qc]);
 
   const filtered = useMemo(() => {
     const list = data?.agencies ?? [];
@@ -114,9 +134,15 @@ function MapPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <p className="label-mono">Situational awareness</p>
-        <h1 className="text-2xl font-bold">Live rescue map</h1>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="label-mono">Situational awareness</p>
+          <h1 className="text-2xl font-bold">Live rescue map</h1>
+        </div>
+        <span className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="pulse-ring h-2 w-2 rounded-full bg-success" />
+          Live feed{liveAt ? ` · updated ${timeAgo(liveAt.toISOString())}` : ""}
+        </span>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">

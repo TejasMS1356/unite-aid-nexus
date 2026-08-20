@@ -49,6 +49,9 @@ function MapPage() {
   const [origin, setOrigin] = useState<{ lat: number; lng: number } | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
 
+  const qc = useQueryClient();
+  const [liveAt, setLiveAt] = useState<Date | null>(null);
+
   const { data } = useQuery({
     queryKey: ["map-data"],
     queryFn: async () => {

@@ -134,9 +134,15 @@ function MapPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <p className="label-mono">Situational awareness</p>
-        <h1 className="text-2xl font-bold">Live rescue map</h1>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="label-mono">Situational awareness</p>
+          <h1 className="text-2xl font-bold">Live rescue map</h1>
+        </div>
+        <span className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="pulse-ring h-2 w-2 rounded-full bg-success" />
+          Live feed{liveAt ? ` · updated ${timeAgo(liveAt.toISOString())}` : ""}
+        </span>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">

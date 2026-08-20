@@ -115,7 +115,22 @@ function AgencyPage() {
     mutationFn: async () => {
       const { capabilities, ...rest } = form;
       const parsed = schema.parse(rest);
-      const payload = { ...parsed, capabilities, owner_id: user!.id };
+      const payload = {
+        name: parsed.name,
+        agency_type: parsed.agency_type,
+        contact_person: parsed.contact_person || null,
+        contact_phone: parsed.contact_phone || null,
+        contact_email: parsed.contact_email || null,
+        address: parsed.address || null,
+        district: parsed.district || null,
+        state: parsed.state || null,
+        description: parsed.description || null,
+        latitude: parsed.latitude,
+        longitude: parsed.longitude,
+        personnel_count: parsed.personnel_count,
+        capabilities,
+        owner_id: user!.id,
+      };
       if (agency) {
         const { error } = await supabase.from("agencies").update(payload).eq("id", agency.id);
         if (error) throw error;
@@ -144,7 +159,10 @@ function AgencyPage() {
   });
 
   const useGps = () => {
-    if (!navigator.geolocation) return toast.error("GPS unavailable on this device");
+    if (!navigator.geolocation) {
+      toast.error("GPS unavailable on this device");
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       (pos) =>
         setForm((f) => ({
